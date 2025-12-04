@@ -1,0 +1,900 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ikiguy AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2&family=Comic+Neue&family=Fredoka+One&family=Indie+Flower&family=Luckiest+Guy&family=Patrick+Hand&family=Quicksand&display=swap" rel="stylesheet">
+
+    <style>
+    /* General Styles */
+html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Quicksand', sans-serif;
+}
+
+main {
+    flex: 1; /* pushes footer down */
+    position: relative; /* ensures absolute elements inside stay inside main */
+}
+
+
+                            /* Header */
+        /* Logo Animation */
+            @keyframes logoBounce {
+                0% { transform: translateY(0); }
+                50% { transform: translateY(-8px) rotate(-2deg); }
+                100% { transform: translateY(0); }
+            }
+
+            /* Gradient Glow Text Animation */
+            @keyframes glowText {
+                0% { filter: drop-shadow(0 0 5px #FF6B6B); }
+                50% { filter: drop-shadow(0 0 15px #FFD93D); }
+                100% { filter: drop-shadow(0 0 25px #6A11CB); }
+            }
+
+    /* Sticky Header */
+    #main-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 50px;
+        background: linear-gradient(135deg, #ffffff, #f7e8b0, #c38dfc, #00B4D8);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        transition: all 0.4s ease;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    /* Logo & Text */
+    #main-header img {
+        width: 90px;
+        transition: width 0.4s ease;
+    }
+    #main-header .logo {
+        font-size: 42px;
+        background: linear-gradient(45deg, #FF6B6B, #FFD93D, #6A11CB, #00B4D8);
+        -webkit-background-clip: text;
+        color: transparent;
+        transition: font-size 0.4s ease;
+    }
+    #main-header .tagline {
+        font-size: 18px;
+        color: #fff;
+        transition: font-size 0.4s ease;
+    }
+
+            /* Small header styles */
+            #main-header.shrink {
+                padding: 10px 50px;
+            }
+            #main-header.shrink img {
+                width: 60px;
+            }
+            #main-header.shrink .logo {
+                font-size: 28px;
+            }
+            #main-header.shrink .tagline {
+                font-size: 14px;
+            }
+
+            /* Navigation Link Animations */
+            .nav-link {
+                color: #fff;
+                text-decoration: none;
+                position: relative;
+                transition: all 0.4s ease;
+            }
+
+            .nav-link::after {
+                content: '';
+                position: absolute;
+                width: 0%;
+                height: 3px;
+                bottom: -5px;
+                left: 0;
+                background: linear-gradient(90deg, #FF6B6B, #FFD93D, #6A11CB, #00B4D8);
+                transition: 0.4s ease;
+                border-radius: 3px;
+            }
+
+            .nav-link:hover::after {
+                width: 100%;
+            }
+
+            .nav-link:hover {
+                transform: scale(1.1) rotate(-2deg);
+                text-shadow: 0 0 12px #fff;
+            }
+
+/* Dropdown container */
+.dropdown {
+    position: relative;
+    overflow: visible;
+}
+
+/* Dropdown content hidden state */
+.dropdown-content {
+    position: absolute;
+    top: 130%;
+    left: 0;
+    background: rgba(255,255,255,0.95);
+    min-width: 180px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    border-radius: 15px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.4s ease;
+    z-index: 999;
+    pointer-events: none;   /* prevents ghost hover */
+}
+
+/* Links inside dropdown */
+.dropdown-content a {
+    display: block;
+    padding: 12px 20px;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+/* Hover effect for links */
+.dropdown-content a:hover {
+    background: linear-gradient(90deg, #FF6B6B, #FFD93D, #6A11CB, #00B4D8);
+    color: #fff;
+    transform: scale(1.05);
+    border-radius: 8px;
+}
+
+/* Show dropdown */
+.dropdown:hover .dropdown-content {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;  /* activates when visible */
+}
+
+                            /* Hero Section */
+                            /* Full-screen hero section */
+                            .hero-section {
+                                position: relative;
+                                width: 100%;
+                                height: 100vh;
+                                overflow: hidden;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                text-align: center;
+                                color: #fff;
+                            }
+
+                            /* GIF Background */
+                            .hero-section::before {
+                                content: "";
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                width: 100%;
+                                height: 100%;
+                                background: url('http://ikiguy.unaux.com/wp-content/uploads/2025/12/TEAM-IKIGUY-DANCING.gif') center center / cover no-repeat;
+                                z-index: 0;
+                                filter: brightness(0.5) contrast(1.2);
+                                animation: bgZoom 20s infinite alternate;
+                            }
+
+                            /* Blue overlay */
+                            .hero-overlay {
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                width: 100%;
+                                height: 100%;
+                                background: rgba(0, 128, 255, 0.25);
+                                z-index: 1;
+                            }
+
+                            /* Hero content */
+                            .hero-content {
+                                position: relative;
+                                z-index: 2;
+                                max-width: 1000px;
+                                padding: 0 20px;
+                            }
+
+                            /* Glowing text */
+                            .glow-text {
+                                font-family: 'Fredoka One', cursive;
+                                font-size: 64px;
+                                color: #fff;
+                                text-shadow: 0 0 10px #00bfff, 0 0 20px #00bfff, 0 0 30px #00bfff, 0 0 40px #00bfff;
+                                animation: glowPulse 2s ease-in-out infinite alternate;
+                                margin-bottom: 20px;
+                            }
+
+                            /* Buttons */
+                            .hero-buttons {
+                                margin-top: 30px;
+                                display: flex;
+                                gap: 20px;
+                                justify-content: center;
+                                flex-wrap: wrap;
+                            }
+
+                            /* Animations */
+                            @keyframes glowPulse {
+                                0% { text-shadow: 0 0 10px #00bfff, 0 0 20px #00bfff, 0 0 30px #00bfff; }
+                                50% { text-shadow: 0 0 20px #00e0ff, 0 0 40px #00e0ff, 0 0 60px #00e0ff; }
+                                100% { text-shadow: 0 0 10px #00bfff, 0 0 20px #00bfff, 0 0 30px #00bfff; }
+                            }
+
+                            @keyframes typing {
+                                from { width: 0; }
+                                to { width: 100%; }
+                            }
+
+                            @keyframes blink {
+                                50% { border-color: transparent; }
+                            }
+
+                            @keyframes bgZoom {
+                                0% { transform: scale(1); }
+                                100% { transform: scale(1.1); }
+                            }
+
+                            /* Ikigai Elements Cards */
+                            .ikigai-elements, .issues-grid, .strategies-grid {
+                                display: flex;
+                                justify-content: center;
+                                flex-wrap: wrap;
+                                gap: 25px;
+                            }
+
+                            .element-card, .issue-card, .strategy-card {
+                                background: #FFFFFF;
+                                border-radius: 20px;
+                                padding: 25px;
+                                width: 220px;
+                                box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+                                transition: transform 0.5s ease, box-shadow 0.5s ease, background 0.5s ease;
+                                animation: floatCard 3s infinite ease-in-out;
+                            }
+
+                            .element-card:hover, .issue-card:hover, .strategy-card:hover {
+                                transform: translateY(-10px) rotate(-2deg) scale(1.05);
+                                box-shadow: 0 15px 35px rgba(255,105,180,0.3);
+                                background: #fff0f5;
+                            }
+
+                            @keyframes floatCard {
+                                0% { transform: translateY(0px); }
+                                50% { transform: translateY(-8px); }
+                                100% { transform: translateY(0px); }
+                            }
+
+                            /* Buttons */
+                            button, .cta-button {
+                                background: #FF8A65;
+                                color: #fff;
+                                border: none;
+                                padding: 15px 40px;
+                                border-radius: 25px;
+                                font-size: 20px;
+                                cursor: pointer;
+                                transition: transform 0.3s, box-shadow 0.3s;
+                            }
+
+                            button:hover, .cta-button:hover {
+                                transform: scale(1.1) rotate(-3deg);
+                                box-shadow: 0 10px 25px rgba(255,64,129,0.5);
+                            }
+
+                            /* Floating Candies */
+                            .candy {
+                                position: absolute;
+                                width: 25px;
+                                height: 25px;
+                                border-radius: 50%;
+                                background: linear-gradient(45deg, #FF4081, #FFEA00);
+                                opacity: 0.7;
+                                animation: floatCandy 6s infinite linear;
+                            }
+
+                            @keyframes floatCandy {
+                                0% { transform: translateY(0) rotate(0deg); }
+                                50% { transform: translateY(-40px) rotate(180deg); }
+                                100% { transform: translateY(0) rotate(360deg); }
+                            }
+
+                    @keyframes bounceRotate {
+                            0%, 100% { transform: translateY(0) rotate(0deg); }
+                            25% { transform: translateY(-15px) rotate(-5deg); }
+                            50% { transform: translateY(-25px) rotate(5deg); }
+                            75% { transform: translateY(-15px) rotate(-5deg); }
+                        }
+
+                        .gif-container img {
+                            transition: transform 0.3s;
+                        }
+
+                        .gif-container img:hover {
+                            transform: scale(1.1) rotate(5deg);
+                            box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+                        }
+
+                            /* Animate text entrance */
+                            .animated-text {
+                                animation: fadeInUp 1.5s forwards;
+                            }
+
+                            .animated-text:nth-child(1) { animation-delay: 0.3s; }
+                            .animated-text:nth-child(2) { animation-delay: 0.8s; }
+
+                            @keyframes fadeInUp {
+                                0% { opacity: 0; transform: translateY(40px); }
+                                100% { opacity: 1; transform: translateY(0); }
+                            }
+
+                                .issues-grid .issue-card:hover {
+                        transform: translateY(-10px) scale(1.05);
+                        box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+                    }
+
+                        .strategies-grid .strategy-card:hover {
+                    transform: translateY(-10px) scale(1.05);
+                    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+                }
+
+                    .cta-button {
+                    font-family: 'Fredoka One', cursive;
+                    font-size: 20px;
+                    text-decoration: none;
+                    padding: 18px 35px;
+                    border-radius: 30px;
+                    background: linear-gradient(135deg, #FF6B6B, #FFD93D, #6A11CB, #00B4D8);
+                    background-size: 300% 300%;
+                    color: #fff;
+                    font-weight: 700;
+                    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+                    transition: all 0.4s ease-in-out;
+                    animation: gradientShift 5s ease infinite;
+                    cursor: pointer;
+                }
+
+                .cta-button:hover {
+                    transform: scale(1.1);
+                    box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 0 20px rgba(255,255,255,0.5);
+                    text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+                }
+
+                @keyframes gradientShift {
+                    0% {background-position: 0% 50%;}
+                    50% {background-position: 100% 50%;}
+                    100% {background-position: 0% 50%;}
+                }
+
+ 
+footer {
+    background: linear-gradient(135deg, #6A11CB, #FF6B6B);
+    color: #fff;
+    padding: 60px 20px 20px;
+    border-radius: 30px 30px 0 0;
+    flex-shrink: 0; /* prevents shrinking */
+}
+
+.black-footer {
+    background: #000;
+    color: #fff;
+    text-align: center;
+    padding: 15px 20px;
+    font-size: 14px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 40px;
+    align-items: flex-start;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-logo {
+    width: 150px;
+    transform: rotate(-15deg);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+    transition: transform 0.4s ease;
+}
+
+.black-footer {
+    background: #000;
+    color: #fff;
+    text-align: center;
+    padding: 15px 20px;
+    font-size: 14px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+                            </style>
+                            </head>
+
+                            <body>
+
+        <header id="main-header">
+
+            <div class="header-left" style="display: flex; align-items: center; gap: 20px;">
+                <img src="http://ikiguy.unaux.com/wp-content/uploads/2025/12/IKIGUY-LOGO-1.png" 
+                    alt="Ikiguy Logo" 
+                    style="width: 90px; height: auto; border-radius: 20px; animation: logoBounce 2s infinite alternate;">
+                <div>
+                    <div class="logo" style="font-family: 'Fredoka One', cursive; font-size: 42px; background: linear-gradient(45deg, #FF6B6B, #FFD93D, #6A11CB, #00B4D8); -webkit-background-clip: text; color: transparent; animation: glowText 3s ease-in-out infinite alternate;">
+                        Ikiguy AI
+                    </div>
+                    <div class="tagline" style="font-family: 'Quicksand', sans-serif; font-size: 18px; color: #fff; letter-spacing: 1px; text-shadow: 1px 1px 6px rgba(0,0,0,0.3);">
+                        FIND YOUR REASON OF BEING
+                    </div>
+                </div>
+            </div>
+
+            <nav style="display: flex; align-items: center; gap: 40px; margin-left: 20px; font-family: 'Quicksand', sans-serif; font-weight: 600;">
+                <a href="https://ikiguy.unaux.com/main-landing-page-ikiguy/" class="nav-link">Home</a>
+                <div class="dropdown">
+                    <a href="#ikigai" class="nav-link">Ikigai</a>
+                    <div class="dropdown-content">
+                        <a href="https://ikiguy.unaux.com/passion/?i=3">Passion</a>
+                        <a href="https://ikiguy.unaux.com/mission/">Mission</a>
+                        <a href="https://ikiguy.unaux.com/vocations/">Vocation</a>
+                        <a href="https://ikiguy.unaux.com/profession-navigation/">Profession</a>
+                    </div>
+                </div>
+                <a href="https://ikiguy.unaux.com/need-help-navigation/" class="nav-link">Need Help?</a>
+                <a href="https://ikiguy.unaux.com/tune-with-ikiguy-navigation/" class="nav-link">Tune With Me</a>
+            </nav>
+        </header>
+
+        <main>
+                            <!-- Welcome Banner -->
+                        <section id="home" class="hero-section">
+                            <div class="hero-overlay"></div>
+                            <div class="hero-content">
+                                <h1 class="glow-text">Welcome to Ikiguy AI!</h1>
+                            <p class="typing-text"><span id="typing-js">
+                                    Greetings! Ikiguy is your friendly AI companion designed to guide you through life's challenges, help you discover your Ikigai, and unlock your purpose. Let's embark on a journey of self-discovery, balance, and mental well-being together.
+                                </span></p>
+                                <div class="hero-buttons">
+                                    <a href="#ikigai" class="cta-button">Discover Ikigai</a>
+                                    <a href="https://ikiguy.unaux.com/need-help-navigation/" class="cta-button">Need Help?</a>
+                                </div>
+                            </div>
+                        </section>
+
+
+                        <!-- Ikigai Section -->
+                        <section id="ikigai" class="ikigai-section" style="padding: 80px 20px; background: linear-gradient(135deg, #E0F7FA, #FFFDE7);">
+                            <div class="container" style="max-width: 1200px; margin: auto; text-align: center; position: relative; z-index: 2;">
+                                <h2 style="font-family: 'Fredoka One', cursive; font-size: 48px; color: #0077B6; margin-bottom: 20px;">What is an Ikigai?</h2>
+                        <p style="font-family: 'Quicksand', sans-serif; font-size: 18px; color: #333; line-height: 1.6; max-width: 800px; margin: 0 auto 40px;">
+                            <span style="font-weight: 600; color: #00B4D8;">Ikigai</span> is a Japanese concept that translates to "<span style="font-weight: 600; color: #FF6B6B;">a reason for being</span>." It combines the terms "<span style="font-weight: 600; color: #FFB347;">iki</span>," meaning "<span style="font-weight: 600; color: #6A11CB;">alive</span>" or "<span style="font-weight: 600; color: #6A11CB;">life</span>," and "<span style="font-weight: 600; color: #FFB347;">gai</span>," meaning "<span style="font-weight: 600; color: #FF6B6B;">benefit</span>" or "<span style="font-weight: 600; color: #FF6B6B;">worth</span>." <span style="font-weight: 600; color: #56AB2F;">Ikigai</span> represents the intersection of <span style="font-weight: 600; color: #FF6B6B;">what you love</span>, <span style="font-weight: 600; color: #00B4D8;">what you're good at</span>, <span style="font-weight: 600; color: #FFB347;">what the world needs</span>, and <span style="font-weight: 600; color: #6A11CB;">what you can be paid for</span>, helping individuals discover their <span style="font-weight: 600; color: #FF6B6B;">purpose</span> and lead a <span style="font-weight: 600; color: #56AB2F;">meaningful life</span>.
+                        </p>
+
+
+                                <div class="ikigai-images" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; margin-bottom: 50px;">
+                                    <img src="https://ceoofyour.life/wp-content/uploads/2022/04/ikigai-904x1030.png" alt="Ikigai Venn Diagram" style="width: 300px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); transform: translateY(0); transition: transform 0.5s;" class="ikigai-img">
+                                    <img src="https://contentcafe2.btol.com/ContentCafe/Jacket.aspx?userID=SDPL33010&password=CC92101&Value=9780143130727&content=L&Return=1&Type=L" alt="Ikigai Concept Book" style="width: 250px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); transform: translateY(0); transition: transform 0.5s;" class="ikigai-img">
+                                </div>
+
+                        <!-- Interactive Ikigai Cards -->
+                        <div class="ikigai-cards" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 25px; margin-top: 50px;">
+
+                            <!-- Passion Card -->
+                            <div class="ikigai-card" style="
+                                background: linear-gradient(135deg, #FFB347, #FFCC33);
+                                border-radius: 20px;
+                                padding: 20px;
+                                width: 240px;
+                                box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+                                transition: transform 0.4s, box-shadow 0.4s;
+                                cursor: pointer;
+                                overflow: hidden;
+                                position: relative;
+                            " onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 20px 40px rgba(0,0,0,0.25)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 15px 35px rgba(0,0,0,0.15)';">
+                                <img src="https://lorijean.com/wp-content/uploads/elementor/thumbs/What-Is-The-Meaning-Of-Passion-e1609163433942-pdi59424b0efmc21c6tstcu0x8oj14395fhe7qv3bc.jpg" alt="Passion" style="width: 100%; border-radius: 15px; margin-bottom: 15px;">
+                                <h3 style="font-family: 'Fredoka One', cursive; color: #fff; margin-bottom: 10px;">Passion</h3>
+                                <p style="font-family: 'Quicksand', sans-serif; font-size: 14px; color: #fff;">Overlap of what you love and what you are good at. Focus on your skills and hobbies.</p>
+                            </div>
+
+                            <!-- Mission Card -->
+                            <div class="ikigai-card" style="
+                                background: linear-gradient(135deg, #6A11CB, #2575FC);
+                                border-radius: 20px;
+                                padding: 20px;
+                                width: 240px;
+                                box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+                                transition: transform 0.4s, box-shadow 0.4s;
+                                cursor: pointer;
+                                overflow: hidden;
+                                position: relative;
+                            " onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 20px 40px rgba(0,0,0,0.25)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 15px 35px rgba(0,0,0,0.15)';">
+                                <img src="https://nmgprod.s3.amazonaws.com/media/files/8e/74/8e7400f12824d2f0b0b7252baffd7f97/cover_image.jpg.760x400_q85_crop_upscale.jpg" alt="Mission" style="width: 100%; border-radius: 15px; margin-bottom: 15px;">
+                                <h3 style="font-family: 'Fredoka One', cursive; color: #fff; margin-bottom: 10px;">Mission</h3>
+                                <p style="font-family: 'Quicksand', sans-serif; font-size: 14px; color: #fff;">Overlap of what you love and what the world needs. Align your purpose with social impact.</p>
+                            </div>
+
+                            <!-- Profession Card -->
+                            <div class="ikigai-card" style="
+                                background: linear-gradient(135deg, #FF416C, #FF4B2B);
+                                border-radius: 20px;
+                                padding: 20px;
+                                width: 240px;
+                                box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+                                transition: transform 0.4s, box-shadow 0.4s;
+                                cursor: pointer;
+                                overflow: hidden;
+                                position: relative;
+                            " onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 20px 40px rgba(0,0,0,0.25)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 15px 35px rgba(0,0,0,0.15)';">
+                                <img src="https://kajabi-storefronts-production.kajabi-cdn.com/kajabi-storefronts-production/file-uploads/blogs/2147511308/images/d4b68a-d86d-b20f-cbf2-13fcb57ab8_619b1ae69b20f114dfd7560d_career-important-life.jpg" alt="Profession" style="width: 100%; border-radius: 15px; margin-bottom: 15px;">
+                                <h3 style="font-family: 'Fredoka One', cursive; color: #fff; margin-bottom: 10px;">Profession</h3>
+                                <p style="font-family: 'Quicksand', sans-serif; font-size: 14px; color: #fff;">Overlap of what you are good at and what you can be paid for. Focus on sustainable career skills.</p>
+                            </div>
+
+                            <!-- Vocation Card -->
+                            <div class="ikigai-card" style="
+                                background: linear-gradient(135deg, #56ab2f, #a8e063);
+                                border-radius: 20px;
+                                padding: 20px;
+                                width: 240px;
+                                box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+                                transition: transform 0.4s, box-shadow 0.4s;
+                                cursor: pointer;
+                                overflow: hidden;
+                                position: relative;
+                            " onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 20px 40px rgba(0,0,0,0.25)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 15px 35px rgba(0,0,0,0.15)';">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJU1Tw2VeQUQTWUqIxU269B-RIUA5aoSmDYA&s" alt="Vocation" style="width: 100%; border-radius: 15px; margin-bottom: 15px;">
+                                <h3 style="font-family: 'Fredoka One', cursive; color: #fff; margin-bottom: 10px;">Vocation</h3>
+                                <p style="font-family: 'Quicksand', sans-serif; font-size: 14px; color: #fff;">Overlap of what the world needs and what you can be paid for. Aim for meaningful impact in your profession.</p>
+                            </div>
+
+                        </div>
+
+
+                            <!-- Animated Pop Image -->
+                            <img id="popImage" src="http://ikiguy.unaux.com/wp-content/uploads/2025/12/SHOCKED-removebg-preview.png" alt="Shocked Character" style="
+                                position: absolute;
+                                bottom: 20px;
+                                left: 20px;
+                                width: 120px;
+                                opacity: 0;
+                                transform: scale(0) rotate(-20deg);
+                                transition: all 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+                                z-index: 5;
+                            ">
+                        </section>
+
+                    <section id="ikiguy-intro" style="background: linear-gradient(135deg, #FFB347, #00B4D8); padding: 80px 20px; text-align: center; border-radius: 30px; margin: 40px 0; color: #fff; position: relative; overflow: hidden;">
+                        <h2 class="animated-text" style="font-family: 'Fredoka One', cursive; font-size: 42px; margin-bottom: 30px; text-shadow: 3px 3px 12px rgba(0,0,0,0.4); opacity: 0;">
+                            Meet <span style="color: #fc2f2f;">Ikiguy Artificial Intelligence</span>
+                        </h2>
+
+                        <p class="animated-text" style="font-family: 'Quicksand', sans-serif; font-size: 22px; line-height: 1.8; max-width: 900px; margin: 0 auto 50px; opacity: 0;">
+                            <span style="font-weight: 700; color: #6A11CB;">Ikiguy</span> is an <span style="font-weight: 700; color: #ff1414;">art advocacy project</span> created by <span style="font-weight: 700; color: #3cbe00;">1st Year BSIT students (1-3)</span>. It uses a <span style="font-weight: 700; color: #8400ff;">modified ChatGPT API</span> tailored specifically to provide <span style="font-weight: 700; color: #0400ff;">mental health guidance</span>. The platform is hosted on an <span style="font-weight: 700; color: #ff0000;">online domain</span> and is also available for <span style="font-weight: 700; color: #6A11CB;">download as an application</span>, making support accessible anytime, anywhere.
+                        </p>
+
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 40px; flex-wrap: wrap; margin-top: 40px;">
+
+                        <!-- First Dancing GIF -->
+                        <div class="gif-container" style="position: relative;">
+                            <img src="http://ikiguy.unaux.com/wp-content/uploads/2025/12/TESTING-DANCING-1.gif" 
+                                alt="Ikiguy Dancing" 
+                                style="width: 250px; height: auto; border-radius: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.4); animation: bounceRotate 2s infinite;">
+                        </div>
+
+                        <!-- Second Dancing GIF -->
+                        <div class="gif-container" style="position: relative;">
+                            <img src="http://ikiguy.unaux.com/wp-content/uploads/2025/12/Character_Dancing_Video_Generated-online-video-cutter.com-1.gif" 
+                                alt="Ikiguy Dancing 2" 
+                                style="width: 250px; height: auto; border-radius: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.4); animation: bounceRotate 2s infinite 0.3s;">
+                        </div>
+
+                    </div>
+
+                        </section>
+
+
+                <!-- Mental Health Problems Section -->
+                <section class="container" style="padding: 60px 20px; background: linear-gradient(135deg, #FFDEE9, #B5FFFC); border-radius: 30px; text-align: center;">
+                    <h2 style="font-family: 'Fredoka One', cursive; font-size: 36px; color: #333; margin-bottom: 20px;">Mental Health Challenges Among Filipino Youth</h2>
+                    <p style="font-family: 'Quicksand', sans-serif; font-size: 18px; color: #555; max-width: 900px; margin: 0 auto 50px; line-height: 1.6;">
+                        According to the <span style="font-weight: 700; color: #FF6B6B;">Philippine Mental Health Association (PMHA)</span>, young Filipinos and Generation Z face various mental health issues. These conditions impact emotional well-being, daily performance, and social relationships. The statistics below show prevalence rates and key characteristics of these challenges.
+                    </p>
+
+                    <div class="issues-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;">
+
+                        <!-- Anxiety -->
+                        <div class="issue-card" style="background: #fff; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); transition: transform 0.3s;">
+                            <h3 style="font-family: 'Fredoka One', cursive; color: #FF6B6B;">Anxiety</h3>
+                            <p style="font-family: 'Quicksand', sans-serif; font-size: 16px;">
+                                Affects <span style="font-weight: 700;">28% of Filipino youth</span>. Includes excessive worry, nervousness, and fear that disrupts daily activities.
+                            </p>
+                            <img src="https://newsinfo.inquirer.net/files/2022/10/Mental-Health-Day-10102022.jpg" alt="Anxiety" style="width: 100%; border-radius: 10px; margin-top: 10px;">
+                            <cite style="font-size: 14px; color: #888;">Source: PMHA, 2024</cite>
+                        </div>
+
+                        <!-- Depression -->
+                        <div class="issue-card" style="background: #fff; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); transition: transform 0.3s;">
+                            <h3 style="font-family: 'Fredoka One', cursive; color: #6A11CB;">Depression</h3>
+                            <p style="font-family: 'Quicksand', sans-serif; font-size: 16px;">
+                                Experienced by <span style="font-weight: 700;">22% of youth</span>, characterized by persistent sadness, low energy, and lack of interest in previously enjoyed activities.
+                            </p>
+                            <img src="https://images.candymag.com/candy/images/2020/02/12/depressionmentalhealthstate.jpg" alt="Depression" style="width: 100%; border-radius: 10px; margin-top: 10px;">
+                            <cite style="font-size: 14px; color: #888;">Source: PMHA, 2024</cite>
+                        </div>
+
+                        <!-- Stress -->
+                        <div class="issue-card" style="background: #fff; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); transition: transform 0.3s;">
+                            <h3 style="font-family: 'Fredoka One', cursive; color: #FFB347;">Stress</h3>
+                            <p style="font-family: 'Quicksand', sans-serif; font-size: 16px;">
+                                About <span style="font-weight: 700;">35% of Filipino students</span> report chronic stress from school, work, or family responsibilities.
+                            </p>
+                            <img src="https://www.bworldonline.com/wp-content/uploads/2022/05/women-stressed.jpg" alt="Stress" style="width: 100%; border-radius: 10px; margin-top: 10px;">
+                            <cite style="font-size: 14px; color: #888;">Source: PMHA, 2024</cite>
+                        </div>
+
+                        <!-- Self-esteem Issues -->
+                        <div class="issue-card" style="background: #fff; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); transition: transform 0.3s;">
+                            <h3 style="font-family: 'Fredoka One', cursive; color: #56AB2F;">Low Self-Esteem</h3>
+                            <p style="font-family: 'Quicksand', sans-serif; font-size: 16px;">
+                                Affects <span style="font-weight: 700;">30% of teens</span>, leading to self-doubt, negative self-image, and social withdrawal.
+                            </p>
+                            <img src="https://www.rappler.com/tachyon/2023/10/imho-structure-oct-11-2023.jpg" alt="Low Self-Esteem" style="width: 100%; border-radius: 10px; margin-top: 10px;">
+                            <cite style="font-size: 14px; color: #888;">Source: PMHA, 2024</cite>
+                        </div>
+
+
+                    </section>
+
+                <!-- Coping Strategies Section -->
+            <section class="container" style="padding: 60px 20px; background: linear-gradient(135deg, #B2FEFA, #0ED2F7); border-radius: 30px; text-align: center;">
+                <h2 style="font-family: 'Fredoka One', cursive; font-size: 36px; color: #333; margin-bottom: 20px;">Coping Strategies for Mental Well-Being</h2>
+                <p style="font-family: 'Quicksand', sans-serif; font-size: 18px; color: #555; max-width: 900px; margin: 0 auto 50px; line-height: 1.6;">
+                    According to the <span style="font-weight: 700; color: #FF6B6B;">Philippine Mental Health Association (PMHA)</span>, using healthy coping strategies helps manage stress, anxiety, and other mental health challenges. Explore these practical methods for daily emotional resilience.
+                </p>
+
+                <div class="strategies-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;">
+
+                    <!-- Mindfulness -->
+                    <div class="strategy-card" style="background: #fff; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); transition: transform 0.3s;">
+                        <h3 style="font-family: 'Fredoka One', cursive; color: #FF6B6B;">Mindfulness</h3>
+                        <p style="font-family: 'Quicksand', sans-serif; font-size: 16px;">
+                            Practice awareness of the present moment to reduce stress and improve focus.
+                        </p>
+                        <img src="https://www.tulasihealthcare.com/wp-content/uploads/2023/01/Imp-mental-health-scaled.webp" alt="Mindfulness" style="width: 100%; border-radius: 10px; margin-top: 10px;">
+                        <cite style="font-size: 14px; color: #888;">Source: Jon Kabat-Zinn, 1990</cite>
+                    </div>
+
+                    <!-- Exercise -->
+                    <div class="strategy-card" style="background: #fff; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); transition: transform 0.3s;">
+                        <h3 style="font-family: 'Fredoka One', cursive; color: #6A11CB;">Exercise</h3>
+                        <p style="font-family: 'Quicksand', sans-serif; font-size: 16px;">
+                            Engage in physical activity to release endorphins, improve mood, and reduce anxiety.
+                        </p>
+                        <img src="https://www.puregym.com/media/htipilqv/sc0011_improve-your-mental-health-2x.jpg?quality=80" alt="Exercise" style="width: 100%; border-radius: 10px; margin-top: 10px;">
+                        <cite style="font-size: 14px; color: #888;">Source: APA, 2023</cite>
+                    </div>
+
+                    <!-- Social Support -->
+                    <div class="strategy-card" style="background: #fff; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); transition: transform 0.3s;">
+                        <h3 style="font-family: 'Fredoka One', cursive; color: #00B4D8;">Social Support</h3>
+                        <p style="font-family: 'Quicksand', sans-serif; font-size: 16px;">
+                            Connect with friends, family, or mentors for guidance and emotional encouragement.
+                        </p>
+                        <img src="https://renwenzhang.com/wp-content/uploads/2023/10/Social-support.jpeg" alt="Social Support" style="width: 100%; border-radius: 10px; margin-top: 10px;">
+                        <cite style="font-size: 14px; color: #888;">Source: Nielsen & Schrøder, 2023</cite>
+                    </div>
+
+                    <!-- Journaling -->
+                    <div class="strategy-card" style="background: #fff; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); transition: transform 0.3s;">
+                        <h3 style="font-family: 'Fredoka One', cursive; color: #FFB347;">Journaling</h3>
+                        <p style="font-family: 'Quicksand', sans-serif; font-size: 16px;">
+                            Record thoughts and emotions daily to track patterns and reduce mental clutter.
+                        </p>
+                        <img src="https://images.candymag.com/candy/images/2023/04/21/how-journaling-improved-my-mental-health.jpg" alt="Journaling" style="width: 100%; border-radius: 10px; margin-top: 10px;">
+                        <cite style="font-size: 14px; color: #888;">Source: PMHA, 2024</cite>
+                    </div>
+
+                    <!-- Meditation -->
+                    <div class="strategy-card" style="background: #fff; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); transition: transform 0.3s;">
+                        <h3 style="font-family: 'Fredoka One', cursive; color: #56AB2F;">Meditation</h3>
+                        <p style="font-family: 'Quicksand', sans-serif; font-size: 16px;">
+                            Practice guided or silent meditation for at least 10 minutes daily to improve focus and calm the mind.
+                        </p>
+                        <img src="https://www.inspiringlivesmagazine.com/wp-content/uploads/2023/07/health-wellness-49.jpeg" alt="Meditation" style="width: 100%; border-radius: 10px; margin-top: 10px;">
+                        <cite style="font-size: 14px; color: #888;">Source: PMHA, 2024</cite>
+                    </div>
+
+                    <!-- Breathing Exercises -->
+                    <div class="strategy-card" style="background: #fff; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); transition: transform 0.3s;">
+                        <h3 style="font-family: 'Fredoka One', cursive; color: #FF6B6B;">Breathing Exercises</h3>
+                        <p style="font-family: 'Quicksand', sans-serif; font-size: 16px;">
+                            Deep breathing techniques reduce anxiety and help regulate the nervous system. Effective for 25% of youth experiencing stress.
+                        </p>
+                        <img src="https://www.bhf.org.uk/-/media/images/information-support/heart-matters/2023/december/wellbeing/deep-breathing-620x400.png?rev=4506ebd34dab4476b56c225b6ff3ad60&la=en&h=400&w=620&hash=725D49F995EDEA5C3934CB671E023CA2" alt="Breathing Exercises" style="width: 100%; border-radius: 10px; margin-top: 10px;">
+                        <cite style="font-size: 14px; color: #888;">Source: PMHA, 2024</cite>
+                    </div>
+
+                    <!-- Creative Arts -->
+                    <div class="strategy-card" style="background: #fff; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); transition: transform 0.3s;">
+                        <h3 style="font-family: 'Fredoka One', cursive; color: #6A11CB;">Creative Arts</h3>
+                        <p style="font-family: 'Quicksand', sans-serif; font-size: 16px;">
+                            Engage in painting, music, or crafts to express emotions and reduce stress. Proven to improve mood in 30% of young adults.
+                        </p>
+                        <img src="https://static01.nyt.com/images/2023/05/30/well/30WELL-ART-BRAIN/30WELL-ART-BRAIN-superJumbo.jpg" alt="Creative Arts" style="width: 100%; border-radius: 10px; margin-top: 10px;">
+                        <cite style="font-size: 14px; color: #888;">Source: PMHA, 2024</cite>
+                    </div>
+
+                    <!-- Time Management -->
+                    <div class="strategy-card" style="background: #fff; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); transition: transform 0.3s;">
+                        <h3 style="font-family: 'Fredoka One', cursive; color: #00B4D8;">Time Management</h3>
+                        <p style="font-family: 'Quicksand', sans-serif; font-size: 16px;">
+                            Plan daily tasks and prioritize activities to reduce overwhelm. Effective in lowering perceived stress for 27% of students.
+                        </p>
+                        <img src="https://fieldreport.caes.uga.edu/wp-content/uploads/2025/04/C1042-social-Preview-Image.png" alt="Time Management" style="width: 100%; border-radius: 10px; margin-top: 10px;">
+                        <cite style="font-size: 14px; color: #888;">Source: PMHA, 2024</cite>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Navigation Buttons Section -->
+            <section class="container" style="padding: 60px 20px; text-align: center; background: linear-gradient(135deg, #FFDEE9, #B5FFFC); border-radius: 30px; margin: 40px 0;">
+                <h2 style="font-family: 'Fredoka One', cursive; font-size: 36px; color: #333; margin-bottom: 30px; text-shadow: 2px 2px 6px rgba(0,0,0,0.2);">
+                    Explore Your Ikigai
+                </h2>
+                <div class="nav-buttons" style="display: flex; justify-content: center; gap: 25px; flex-wrap: wrap;">
+                    <a href="https://ikiguy.unaux.com/passion/?i=3" class="cta-button">Passion</a>
+                    <a href="https://ikiguy.unaux.com/mission/" class="cta-button">Mission</a>
+                    <a href="https://ikiguy.unaux.com/profession-navigation/" class="cta-button">Profession</a>
+                    <a href="https://ikiguy.unaux.com/vocations/" class="cta-button">Vocation</a>
+                </div>
+            </section>
+        
+        </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <!-- Contact Section -->
+            <div class="footer-section">
+                <h3>Contact Info (Philippine Mental Health Association)</h3>
+                <p>Website: <a href="https://www.pmha.org.ph/" style="color: #FFD93D;">https://www.pmha.org.ph/</a></p>
+                <p>Phone: (02) 8921 4958</p>
+                <p>Email: <a href="mailto:hello@pmha.org.ph" style="color: #FFD93D;">hello@pmha.org.ph</a></p>
+            </div>
+
+            <!-- Logo & Info Section -->
+            <div class="footer-section" style="text-align:center;">
+                <img src="C:\Users\Roden Marc\OneDrive\Desktop\WEB APPLICATIONS - ART APPRECIATION GROUPINGS PROJECT FINALS\HOME LANDING PAGE\SHOCKED-removebg-preview (1).png" class="footer-logo" alt="Ikiguy Logo">
+                <p>Ikiguy - AI Mental Health Assistant, Pamantasan ng Lungsod ng Maynila</p>
+                <p>Contact for Concerns: Have questions or concerns? Reach out to us anytime!</p>
+            </div>
+
+            <!-- Quick Links Section -->
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul style="list-style: none; padding: 0; line-height: 2;">
+                    <li><a href="https://ikiguy.unaux.com/main-landing-page-ikiguy/" style="color: #FFD93D;">Home</a></li>
+                    <li><a href="#ikigai" style="color: #FFD93D;">Ikigai</a></li>
+                    <li><a href="https://ikiguy.unaux.com/need-help-navigation/" style="color: #FFD93D;">Need Help?</a></li>
+                    <li><a href="https://ikiguy.unaux.com/tune-with-ikiguy-navigation/" style="color: #FFD93D;">Tune With Me</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="black-footer">
+            © Ikiguy - Mental Health AI Assistant. All Rights Reserved. Website Designed by GROUP 3 BSIT 1-3 [POWERED BY: FGC]
+        </div>
+    </footer>
+
+                            <!-- Floating Candies -->
+                            <div id="candy-container"></div>
+
+                        <p id="typing-js"></p>
+                        <script>
+                        const text = "Greetings! Ikiguy is your friendly AI companion designed to guide you through life's challenges, help you discover your Ikigai, and unlock your purpose. Let's embark on a journey of self-discovery, balance, and mental well-being together.";
+                        const element = document.getElementById('typing-js');
+                        let index = 0;
+
+                        function type() {
+                            if(index < text.length){
+                                element.innerHTML += text.charAt(index);
+                                index++;
+                                setTimeout(type, 50); // typing speed
+                            }
+                        }
+                        type();
+
+                        const cards = document.querySelectorAll('.ikigai-card');
+                        cards.forEach(card => {
+                            card.addEventListener('mouseenter', () => {
+                                card.style.transform = 'translateY(-10px) scale(1.05)';
+                                card.style.boxShadow = '0 15px 35px rgba(0,180,216,0.3)';
+                            });
+                            card.addEventListener('mouseleave', () => {
+                                card.style.transform = 'translateY(0) scale(1)';
+                                card.style.boxShadow = '0 10px 25px rgba(0,0,0,0.05)';
+                            });
+                        });
+
+                        const images = document.querySelectorAll('.ikigai-img');
+                        images.forEach(img => {
+                            img.addEventListener('mouseenter', () => {
+                                img.style.transform = 'translateY(-10px) scale(1.03)';
+                            });
+                            img.addEventListener('mouseleave', () => {
+                                img.style.transform = 'translateY(0) scale(1)';
+                            });
+                        });
+
+                        // Scroll animation for pop image in Ikigai section
+                        const popImage = document.getElementById('popImage');
+
+                        const observer = new IntersectionObserver(entries => {
+                            entries.forEach(entry => {
+                                if (entry.isIntersecting) {
+                                    popImage.style.opacity = '1';
+                                    popImage.style.transform = 'scale(1)';
+                                } else {
+                                    popImage.style.opacity = '0';
+                                    popImage.style.transform = 'scale(0.8)';
+                                }
+                            });
+                        }, { threshold: 0.5 }); // triggers when half of the section is visible
+
+                        observer.observe(document.querySelector('#ikigai'));
+
+                            window.addEventListener('scroll', function() {
+                const header = document.getElementById('main-header');
+                if(window.scrollY > 80) { // Trigger shrink after scrolling 80px
+                    header.classList.add('shrink');
+                } else {
+                    header.classList.remove('shrink');
+                }
+            });
+            
+            const container = document.getElementById("candy-container");
+
+const gradients = [
+    "linear-gradient(45deg, #FFB3BA, #FFDFBA)",
+    "linear-gradient(45deg, #BAFFC9, #BAE1FF)",
+    "linear-gradient(45deg, #FFC6FF, #BAE1FF)",
+    "linear-gradient(45deg, #FFDFBA, #FFC6FF)",
+    "linear-gradient(45deg, #BAE1FF, #FFB3BA)",
+    "linear-gradient(45deg, #FFC6FF, #BAFFC9)"
+];
+
+for (let i = 0; i < 80; i++) {
+    const candy = document.createElement("div");
+    const size = Math.floor(Math.random() * 20) + 20;
+
+    candy.className = "candy";
+    candy.style.position = "absolute";
+    candy.style.width = size + "px";
+    candy.style.height = size + "px";
+    candy.style.borderRadius = "50%";
+    candy.style.top = Math.random() * 3000 + "px";
+    candy.style.left = Math.random() * 1800 + "px";
+    candy.style.background = gradients[Math.floor(Math.random() * gradients.length)];
+    candy.style.animation = "floatCandy 6s ease-in-out infinite";
+
+    container.appendChild(candy);
+}
+
+                        </script>
